@@ -1,0 +1,119 @@
+\NeedsTeXFormat{LaTeX2e}%
+
+\newif\ifmyarticle@nsmodel\myarticle@nsmodelfalse
+
+\ProcessOptions
+
+\AtEndDocument{\label{lastpage}}
+
+\let\@jid\@empty
+\def\jid#1{\gdef\@jid{#1}}
+
+\def\volume#1{\gdef\@vol{#1}}
+\def\firstpage#1{\gdef\@firstpage{#1}%
+                  \setcounter{page}{#1}}
+                  
+\def\lastpage{\pageref{lastpage}}
+
+\long\def\pprintMaketitle{\clearpage
+  \iflongmktitle\if@twocolumn\let\columnwidth=\textwidth\fi\fi
+  \resetTitleCounters
+  \def\baselinestretch{1}%
+  \printFirstPageNotes
+  \setlength{\parindent}{0pt}
+ \thispagestyle{pprintTitle}%
+   \def\baselinestretch{-1}%
+   %\quad\vskip-40pt					% TODO: Hier ist space nach oben definiert
+    \huge\@title\par\vskip18pt
+    \large\elsauthors\par\vskip10pt
+    %\scriptsize\itshape\elsaddress\par\vskip32pt   % TODO: Set address at the beginning
+    \hrule\vskip12pt
+    \ifvoid\absbox\else\unvbox\absbox\par\vskip10pt\fi
+    \ifvoid\infobox\else\unvbox\infobox\par\vskip10pt\fi
+    \ifvoid\keybox\else\unvbox\keybox\par\vskip10pt\fi
+    \hrule\vskip12pt
+  \gdef\thefootnote{\arabic{footnote}}%
+  }
+
+
+\def\@titlefont{\fontsize{24pt}{26.4}\selectfont}
+\def\myarticle@authorfont{\fontsize{14pt}{15.6}\selectfont}
+\def\myarticle@absfont{\fontsize{9pt}{10.8}\selectfont}
+
+\def\runauth#1{\gdef\@runauth{#1}}
+\runauth{Author}
+
+
+\def\ps@headings{%
+    \def\@oddhead{\parbox{\textwidth}{\itshape\small%
+       \hfil 
+         \@runauth\hfil}}%
+    \def\@evenhead{\parbox{\textwidth}{\itshape\small%
+         \hfil\@runauth
+                  \hfil}}%
+    \let\@evenfoot\@empty%
+    \let\@evenfoot\@oddfoot}
+
+\pagestyle{headings}
+
+\def\footnoterule{\kern-3\p@%
+  \hrule width 3pc height .25pt
+  \kern3\p@}
+
+\def\information{%
+  \def\sep{\unskip, }%
+  \global\setbox\infobox=\vbox\bgroup\hsize=\textwidth
+  \normalsize\normalfont\def\baselinestretch{1}
+  \parskip\z@
+  \myarticle@absfont\noindent\par                           % TODO
+  %\myarticle@absfont\noindent\textit{Website: }\par        % TODO
+  %\myarticle@absfont\noindent\textit{Curriculum vitae: }   % TODO
+  \raggedright
+  \ignorespaces}
+\def\endinformation{\par \egroup}
+
+\def\keyword{%
+  \def\sep{\unskip, }%
+  \global\setbox\keybox=\vbox\bgroup\hsize=\textwidth
+  \normalsize\normalfont\def\baselinestretch{1}
+  \parskip\z@
+  \myarticle@absfont\noindent\textit{Keywords: }
+  \raggedright
+  \ignorespaces}
+\def\endkeyword{\par \egroup}
+
+\ifmyarticle@nsmodel
+\def\figurename{Fig.}
+\long\def\@makecaption#1#2{%
+  \vskip\abovecaptionskip\footnotesize
+  \sbox\@tempboxa{#1. #2}%
+  \ifdim \wd\@tempboxa >\hsize
+    #1. #2\par
+  \else
+    \global \@minipagefalse
+    \hb@xt@\hsize{\hfil\box\@tempboxa\hfil}%
+  \fi
+  \vskip\belowcaptionskip}
+\else
+\long\def\@makecaption#1#2{%
+  \vskip\abovecaptionskip\footnotesize
+  \sbox\@tempboxa{#1. #2}%
+  \ifdim \wd\@tempboxa >\hsize
+    #1. #2\par
+  \else
+    \global \@minipagefalse
+    \hb@xt@\hsize{\hfil\box\@tempboxa\hfil}%
+  \fi
+  \vskip\belowcaptionskip}
+\fi
+
+\makeatother
+
+\newcommand{\mailaddress}[1]{\address{{\normalfont\small#1}}}
+
+\def\ml{l\kern-0.45ex
+\raise 0.1ex\hbox{'}\kern-0.10ex}
+\pagestyle{headings}
+
+
+\jid{procs}
